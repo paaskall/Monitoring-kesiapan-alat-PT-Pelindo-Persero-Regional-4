@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breakdown List - PT Pelindo Terminal Petikemas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+/* Navbar Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-scrolled {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: #4b5563;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: #1e40af;
+            background-color: #f3f4f6;
+        }
+
+        .nav-link.active {
+            color: #1e40af;
+            background-color: #dbeafe;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 1rem;
+            right: 1rem;
+            height: 2px;
+            background-color: #1e40af;
+            border-radius: 2px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .user-info:hover {
+            background-color: #f3f4f6;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.875rem;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .mobile-menu-button {
+            display: none;
+            background: none;
+            border: none;
+            color: #4b5563;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+
+        .mobile-menu-button:hover {
+            background-color: #f3f4f6;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 80px;
+            }
+
+            .nav-content {
+                height: 60px;
+            }
+
+            .mobile-menu-button {
+                display: block;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                gap: 0;
+                transform: translateY(-10px);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .nav-link {
+                width: 100%;
+                justify-content: flex-start;
+                padding: 1rem;
+                border-radius: 6px;
+                margin-bottom: 0.25rem;
+            }
+
+            .user-menu {
+                display: none;
+            }
+
+            .logo-text {
+                font-size: 1.125rem;
+            }
+
+            .logo-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 1.125rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 0 0.75rem;
+            }
+
+            .logo-text span {
+                display: none;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-critical { background-color: #fee2e2; color: #991b1b; border-left: 4px solid #ef4444; }
+        .status-high { background-color: #fef3c7; color: #92400e; border-left: 4px solid #f59e0b; }
+        .status-medium { background-color: #e0e7ff; color: #3730a3; border-left: 4px solid #6366f1; }
+        .status-low { background-color: #d1fae5; color: #065f46; border-left: 4px solid #10b981; }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1000px;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background-color: rgb(21, 135, 241);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        thead th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        tbody td {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.875rem;
+        }
+
+        tbody tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority-critical { background-color: #fecaca; color: #dc2626; }
+        .priority-high { background-color: #fed7aa; color: #ea580c; }
+        .priority-medium { background-color: #fef08a; color: #ca8a04; }
+        .priority-low { background-color: #bbf7d0; color: #16a34a; }
+
+        .terminal-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .terminal-tjpriok { background-color: #dbeafe; color: #1e40af; }
+        .terminal-tanjungperak { background-color: #fce7f3; color: #be185d; }
+        .terminal-makassar { background-color: #f0fdf4; color: #166534; }
+        .terminal-belawan { background-color: #fffbeb; color: #92400e; }
+
+        .filter-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .select-box {
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+            min-width: 150px;
+        }
+
+        .select-box:focus {
+            outline: none;
+            border-color: rgb(21, 135, 241);
+        }
+
+        .input-box {
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: white;
+            transition: border-color 0.3s ease;
+            min-width: 200px;
+        }
+
+        .input-box:focus {
+            outline: none;
+            border-color: rgb(21, 135, 241);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .count-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 0.875rem;
+            font-weight: 700;
+            margin-left: 0.5rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e5e7eb;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-critical { background-color: #ef4444; }
+        .progress-high { background-color: #f59e0b; }
+        .progress-medium { background-color: #6366f1; }
+        .progress-low { background-color: #10b981; }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                padding: 1rem;
+            }
+
+            thead th,
+            tbody td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            table {
+                min-width: 900px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .select-box, .input-box {
+                min-width: 120px;
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0.5rem !important;
+            }
+
+            table {
+                min-width: 800px;
+            }
+
+            h1 {
+                font-size: 1.25rem !important;
+            }
+
+            h2 {
+                font-size: 1rem !important;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            
+            button {
+                display: none !important;
+            }
+            
+            .card {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            .modal {
+                display: none !important;
+            }
+        }
+
+        /* Real-time indicator */
+        .real-time-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            background-color: #10b981;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* Auto refresh toggle */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #10b981;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-6 lg:p-8">
+    <div class="max-w-7xl mx-auto">
+            <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-content">
+                <!-- Logo -->
+                <a href="#" class="logo">
+                    <img src="img/Pelindo Terminal Petikemas.png" alt="Pelindo Logo" class="h-10 w-auto">
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                     <a href="daily_report.html" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Daily Report</span>
+                    </a>
+                    <a href="monthly_report.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Monthly Report</span>
+                    </a>
+                    <a href="equipment_status_history.html" class="nav-link">
+                        <i class="fas fa-history"></i>
+                        <span>Equipment History</span>
+                    </a>
+                    <a href="breakdown_list.html" class="nav-link active">
+                        <i class="fas fa-triangle-exclamation"></i>
+                        <span>Breakdown List</span>
+                    </a>
+                </div>
+
+                <!-- User Menu -->
+                <div class="user-menu">
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            AS
+                        </div>
+                        <div class="user-details">
+                            <div class="user-name">Admin Supervisor</div>
+                            <div class="user-role">Terminal Manager</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-button" id="mobileMenuButton">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+        <!-- Header -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6 mt-20">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="bg-red-100 p-3 rounded-full">
+                        <i class="fas fa-triangle-exclamation text-red-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800">BREAKDOWN LIST</h1>
+                        <h2 class="text-base md:text-lg lg:text-xl font-semibold text-red-600 mt-1">Real-time Equipment Breakdown Monitoring</h2>
+                        <div class="flex items-center gap-2 mt-2">
+                            <span class="real-time-indicator">
+                                <i class="fas fa-circle"></i>
+                                LIVE
+                            </span>
+                            <span class="text-xs text-gray-500">Update terakhir: <span id="lastUpdateTime">-</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-2 w-full md:w-auto">
+                    <button onclick="exportBreakdownList()" class="flex-1 md:flex-none bg-green-500 text-white px-3 md:px-4 py-2 rounded-lg font-semibold hover:bg-green-600 transition text-xs md:text-sm flex items-center gap-2">
+                        <i class="fas fa-file-export"></i>
+                        Export
+                    </button>
+                    <button onclick="printReport()" class="flex-1 md:flex-none bg-blue-500 text-white px-3 md:px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transition text-xs md:text-sm flex items-center gap-2">
+                        <i class="fas fa-print"></i>
+                        Print
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats-grid mb-4 md:mb-6">
+            <div class="card bg-gradient-to-br from-red-500 to-red-600 text-white relative">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-sm md:text-base font-semibold mb-2">Total Breakdown</h3>
+                        <p class="text-2xl md:text-3xl font-bold" id="totalBreakdown">0</p>
+                        <p class="text-xs mt-1">Alat sedang breakdown</p>
+                    </div>
+                    <i class="fas fa-triangle-exclamation text-2xl opacity-80"></i>
+                </div>
+            </div>
+            <div class="card bg-gradient-to-br from-orange-500 to-orange-600 text-white">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-sm md:text-base font-semibold mb-2">Critical Priority</h3>
+                        <p class="text-2xl md:text-3xl font-bold" id="criticalCount">0</p>
+                        <p class="text-xs mt-1">Perlu penanganan segera</p>
+                    </div>
+                    <i class="fas fa-exclamation-circle text-2xl opacity-80"></i>
+                </div>
+            </div>
+            <div class="card bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-sm md:text-base font-semibold mb-2">Avg. Response Time</h3>
+                        <p class="text-2xl md:text-3xl font-bold" id="avgResponseTime">0m</p>
+                        <p class="text-xs mt-1">Rata-rata waktu respon</p>
+                    </div>
+                    <i class="fas fa-clock text-2xl opacity-80"></i>
+                </div>
+            </div>
+            <div class="card bg-gradient-to-br from-purple-500 to-purple-600 text-white">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-sm md:text-base font-semibold mb-2">Breakdown Rate</h3>
+                        <p class="text-2xl md:text-3xl font-bold" id="breakdownRate">0%</p>
+                        <p class="text-xs mt-1">Dari total alat operasional</p>
+                    </div>
+                    <i class="fas fa-chart-line text-2xl opacity-80"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="card mb-4 md:mb-6">
+            <div class="filter-section">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Pilih Terminal</label>
+                    <select id="terminalSelect" class="select-box" onchange="filterBreakdowns()">
+                        <option value="all">Semua Terminal</option>
+                        <option value="tjpriok">Terminal Jakarta</option>
+                        <option value="tanjungperak">Terminal Surabaya</option>
+                        <option value="makassar">Terminal Makassar</option>
+                        <option value="belawan">Terminal Belawan</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Prioritas</label>
+                    <select id="prioritySelect" class="select-box" onchange="filterBreakdowns()">
+                        <option value="all">Semua Prioritas</option>
+                        <option value="critical">Critical</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Kategori Alat</label>
+                    <select id="categorySelect" class="select-box" onchange="filterBreakdowns()">
+                        <option value="all">Semua Kategori</option>
+                        <option value="dermaga">Alat Dermaga</option>
+                        <option value="cy">Alat CY</option>
+                        <option value="mobile">Alat Mobile</option>
+                        <option value="angkut">Alat Angkut</option>
+                    </select>
+                </div>
+                
+                <div class="flex-1">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Cari Alat</label>
+                    <input type="text" id="searchInput" class="input-box w-full" placeholder="Masukkan nomor alat..." onkeyup="filterBreakdowns()">
+                </div>
+
+                <div class="flex items-end gap-4">
+                    <div class="flex items-center gap-2">
+                        <label class="text-sm font-semibold text-gray-700">Auto Refresh</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="autoRefreshToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <button onclick="refreshData()" class="bg-blue-500 text-white px-4 py-2.5 rounded-lg font-semibold hover:bg-blue-600 transition text-sm flex items-center gap-2">
+                        <i class="fas fa-refresh"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breakdown Overview Chart -->
+        <div class="card mb-4 md:mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-base md:text-lg font-bold text-gray-800">Overview Breakdown per Terminal</h3>
+                <div class="flex gap-2">
+                    <button onclick="showBreakdownTrend()" class="bg-white text-blue-600 border border-blue-600 px-3 py-2 rounded-lg font-semibold hover:bg-blue-50 transition text-xs md:text-sm flex items-center gap-2">
+                        <i class="fas fa-chart-line"></i>
+                        Trend 30 Hari
+                    </button>
+                </div>
+            </div>
+            <div class="chart-container">
+                <div id="breakdownChart"></div>
+            </div>
+        </div>
+
+        <!-- Breakdown List Table -->
+        <div class="card mb-4 md:mb-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
+                <h3 class="text-base md:text-lg lg:text-xl font-bold text-gray-800">Daftar Equipment Breakdown</h3>
+                <div class="flex gap-2">
+                    <button onclick="showCriticalOnly()" class="bg-red-500 text-white px-3 py-2 rounded-lg font-semibold hover:bg-red-600 transition text-xs md:text-sm flex items-center gap-2">
+                        <i class="fas fa-fire"></i>
+                        Tampilkan Critical Only
+                    </button>
+                    <button onclick="sendAlert()" class="bg-orange-500 text-white px-3 py-2 rounded-lg font-semibold hover:bg-orange-600 transition text-xs md:text-sm flex items-center gap-2 relative">
+                        <i class="fas fa-bell"></i>
+                        Alert Manager
+                        <span id="alertBadge" class="notification-badge">3</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table id="breakdownTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Terminal</th>
+                            <th>Nomor Alat</th>
+                            <th>Kategori</th>
+                            <th>Status</th>
+                            <th>Prioritas</th>
+                            <th>Durasi Breakdown</th>
+                            <th>Penyebab</th>
+                            <th>Teknisi</th>
+                            <th>Estimasi Perbaikan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="breakdownBody">
+                        <!-- Data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Terminal Comparison -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+            <!-- Response Time Comparison -->
+            <div class="card">
+                <h3 class="text-base md:text-lg font-bold text-gray-800 mb-4">Response Time per Terminal</h3>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>Terminal Jakarta</span>
+                            <span class="font-semibold">45 menit</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill progress-critical" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>Terminal Surabaya</span>
+                            <span class="font-semibold">32 menit</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill progress-high" style="width: 53%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>Terminal Makassar</span>
+                            <span class="font-semibold">28 menit</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill progress-medium" style="width: 47%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>Terminal Belawan</span>
+                            <span class="font-semibold">22 menit</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill progress-low" style="width: 37%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Breakdown by Category -->
+            <div class="card">
+                <h3 class="text-base md:text-lg font-bold text-gray-800 mb-4">Breakdown by Kategori</h3>
+                <div id="categoryChart" class="chart-container" style="height: 250px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Breakdown Detail -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg md:text-xl font-bold text-gray-800" id="detailModalTitle">Detail Breakdown</h3>
+                <button onclick="closeDetailModal()" class="text-gray-500 hover:text-gray-700 text-2xl font-bold">×</button>
+            </div>
+            <div id="detailContent">
+                <!-- Detail content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Breakdown Trend -->
+    <div id="trendModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg md:text-xl font-bold text-gray-800">Trend Breakdown 30 Hari Terakhir</h3>
+                <button onclick="closeTrendModal()" class="text-gray-500 hover:text-gray-700 text-2xl font-bold">×</button>
+            </div>
+            <div id="trendChart" class="chart-container" style="height: 400px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Sample breakdown data
+        const breakdownData = [
+            {
+                id: 1,
+                terminal: 'tjpriok',
+                equipment: 'QC-001',
+                category: 'dermaga',
+                status: 'breakdown',
+                priority: 'critical',
+                duration: '2 jam 15 menit',
+                cause: 'Sistem hidrolik bocor',
+                technician: 'Budi Santoso',
+                eta: '4 jam',
+                startTime: new Date(Date.now() - 2 * 60 * 60 * 1000 - 15 * 60 * 1000),
+                impact: 'high'
+            },
+            {
+                id: 2,
+                terminal: 'tanjungperak',
+                equipment: 'RTG-005',
+                category: 'cy',
+                status: 'breakdown',
+                priority: 'high',
+                duration: '45 menit',
+                cause: 'Masalah electrical panel',
+                technician: 'Ahmad Wijaya',
+                eta: '2 jam',
+                startTime: new Date(Date.now() - 45 * 60 * 1000),
+                impact: 'medium'
+            },
+            {
+                id: 3,
+                terminal: 'makassar',
+                equipment: 'TT-003',
+                category: 'angkut',
+                status: 'breakdown',
+                priority: 'medium',
+                duration: '1 jam 30 menit',
+                cause: 'Ban pecah',
+                technician: 'Siti Rahayu',
+                eta: '1 jam',
+                startTime: new Date(Date.now() - 90 * 60 * 1000),
+                impact: 'low'
+            },
+            {
+                id: 4,
+                terminal: 'belawan',
+                equipment: 'RS-002',
+                category: 'mobile',
+                status: 'breakdown',
+                priority: 'low',
+                duration: '30 menit',
+                cause: 'Sensor rusak',
+                technician: 'Joko Prasetyo',
+                eta: '45 menit',
+                startTime: new Date(Date.now() - 30 * 60 * 1000),
+                impact: 'low'
+            },
+            {
+                id: 5,
+                terminal: 'tjpriok',
+                equipment: 'CC-001',
+                category: 'dermaga',
+                status: 'breakdown',
+                priority: 'critical',
+                duration: '3 jam',
+                cause: 'Motor hoist overload',
+                technician: 'Rudi Hermawan',
+                eta: '6 jam',
+                startTime: new Date(Date.now() - 3 * 60 * 60 * 1000),
+                impact: 'high'
+            },
+            {
+                id: 6,
+                terminal: 'tanjungperak',
+                equipment: 'FL-002',
+                category: 'mobile',
+                status: 'breakdown',
+                priority: 'high',
+                duration: '1 jam',
+                cause: 'Sistem kontrol error',
+                technician: 'Dewi Kartika',
+                eta: '3 jam',
+                startTime: new Date(Date.now() - 60 * 60 * 1000),
+                impact: 'medium'
+            }
+        ];
+
+        const terminalNames = {
+            'tjpriok': 'Terminal Jakarta',
+            'tanjungperak': 'Terminal Surabaya',
+            'makassar': 'Terminal Makassar',
+            'belawan': 'Terminal Belawan'
+        };
+
+        const categoryNames = {
+            'dermaga': 'Alat Dermaga',
+            'cy': 'Alat CY',
+            'mobile': 'Alat Mobile',
+            'angkut': 'Alat Angkut'
+        };
+
+        let autoRefreshInterval;
+        let filteredData = [...breakdownData];
+
+        // Initialize the page
+        function initializePage() {
+            updateLastUpdateTime();
+            renderBreakdownTable();
+            updateStats();
+            renderCharts();
+            startAutoRefresh();
+            
+            // Set up auto refresh toggle
+            document.getElementById('autoRefreshToggle').addEventListener('change', function() {
+                if (this.checked) {
+                    startAutoRefresh();
+                } else {
+                    stopAutoRefresh();
+                }
+            });
+        }
+
+        // Update last update time
+        function updateLastUpdateTime() {
+            const now = new Date();
+            document.getElementById('lastUpdateTime').textContent = 
+                now.toLocaleTimeString('id-ID') + ' ' + now.toLocaleDateString('id-ID');
+        }
+
+        // Render breakdown table
+        function renderBreakdownTable() {
+            const tbody = document.getElementById('breakdownBody');
+            let html = '';
+            
+            filteredData.forEach((item, index) => {
+                const terminalClass = `terminal-${item.terminal}`;
+                const priorityClass = `priority-${item.priority}`;
+                
+                html += `
+                    <tr class="status-${item.priority}">
+                        <td class="font-semibold">${index + 1}</td>
+                        <td>
+                            <span class="terminal-badge ${terminalClass}">
+                                ${terminalNames[item.terminal]}
+                            </span>
+                        </td>
+                        <td class="font-bold text-gray-800">${item.equipment}</td>
+                        <td>${categoryNames[item.category]}</td>
+                        <td>
+                            <span class="priority-badge ${priorityClass}">
+                                ${item.priority.toUpperCase()}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="priority-badge ${priorityClass}">
+                                <i class="fas fa-clock mr-1"></i>
+                                ${item.priority.toUpperCase()}
+                            </span>
+                        </td>
+                        <td class="font-semibold text-red-600">${item.duration}</td>
+                        <td>${item.cause}</td>
+                        <td>
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-blue-600 text-sm"></i>
+                                </div>
+                                <span>${item.technician}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="font-semibold ${item.priority === 'critical' ? 'text-red-600' : 'text-amber-600'}">
+                                ${item.eta}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="flex gap-2">
+                                <button onclick="viewDetail(${item.id})" class="text-blue-600 hover:text-blue-800 text-sm font-semibold">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button onclick="assignTechnician(${item.id})" class="text-green-600 hover:text-green-800 text-sm font-semibold">
+                                    <i class="fas fa-user-plus"></i>
+                                </button>
+                                <button onclick="updateStatus(${item.id})" class="text-purple-600 hover:text-purple-800 text-sm font-semibold">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+
+        // Update statistics
+        function updateStats() {
+            const total = filteredData.length;
+            const critical = filteredData.filter(item => item.priority === 'critical').length;
+            const avgResponse = calculateAverageResponseTime();
+            const breakdownRate = ((total / 45) * 100).toFixed(1); // Assuming 45 total equipment
+            
+            document.getElementById('totalBreakdown').textContent = total;
+            document.getElementById('criticalCount').textContent = critical;
+            document.getElementById('avgResponseTime').textContent = avgResponse + 'm';
+            document.getElementById('breakdownRate').textContent = breakdownRate + '%';
+            
+            // Update alert badge
+            document.getElementById('alertBadge').textContent = critical;
+        }
+
+        // Calculate average response time
+        function calculateAverageResponseTime() {
+            // Simulate response times based on priority
+            let totalTime = 0;
+            filteredData.forEach(item => {
+                switch(item.priority) {
+                    case 'critical': totalTime += 45; break;
+                    case 'high': totalTime += 32; break;
+                    case 'medium': totalTime += 28; break;
+                    case 'low': totalTime += 22; break;
+                }
+            });
+            
+            return filteredData.length > 0 ? Math.round(totalTime / filteredData.length) : 0;
+        }
+
+        // Render charts
+        function renderCharts() {
+            renderBreakdownChart();
+            renderCategoryChart();
+        }
+
+        // Render breakdown chart
+        function renderBreakdownChart() {
+            const terminalCounts = {
+                'tjpriok': 0,
+                'tanjungperak': 0,
+                'makassar': 0,
+                'belawan': 0
+            };
+            
+            filteredData.forEach(item => {
+                terminalCounts[item.terminal]++;
+            });
+            
+            const options = {
+                series: [{
+                    name: 'Breakdown Count',
+                    data: [
+                        terminalCounts.tjpriok,
+                        terminalCounts.tanjungperak,
+                        terminalCounts.makassar,
+                        terminalCounts.belawan
+                    ]
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 300,
+                    toolbar: {
+                        show: false
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        borderRadius: 4,
+                        horizontal: false,
+                        columnWidth: '60%',
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                xaxis: {
+                    categories: ['Terminal Jakarta', 'Terminal Surabaya', 'Terminal Makassar', 'Terminal Belawan'],
+                },
+                colors: ['#ef4444'],
+                grid: {
+                    borderColor: '#e7e7e7',
+                    row: {
+                        colors: ['#f3f4f6', 'transparent'],
+                        opacity: 0.5
+                    },
+                }
+            };
+            
+            const chart = new ApexCharts(document.querySelector("#breakdownChart"), options);
+            chart.render();
+        }
+
+        // Render category chart
+        function renderCategoryChart() {
+            const categoryCounts = {
+                'dermaga': 0,
+                'cy': 0,
+                'mobile': 0,
+                'angkut': 0
+            };
+            
+            filteredData.forEach(item => {
+                categoryCounts[item.category]++;
+            });
+            
+            const options = {
+                series: [categoryCounts.dermaga, categoryCounts.cy, categoryCounts.mobile, categoryCounts.angkut],
+                chart: {
+                    type: 'donut',
+                    height: 250
+                },
+                labels: ['Alat Dermaga', 'Alat CY', 'Alat Mobile', 'Alat Angkut'],
+                colors: ['#ef4444', '#f59e0b', '#6366f1', '#10b981'],
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: {
+                            width: 200
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }]
+            };
+            
+            const chart = new ApexCharts(document.querySelector("#categoryChart"), options);
+            chart.render();
+        }
+
+        // Filter breakdowns
+        function filterBreakdowns() {
+            const terminalFilter = document.getElementById('terminalSelect').value;
+            const priorityFilter = document.getElementById('prioritySelect').value;
+            const categoryFilter = document.getElementById('categorySelect').value;
+            const searchFilter = document.getElementById('searchInput').value.toLowerCase();
+            
+            filteredData = breakdownData.filter(item => {
+                const terminalMatch = terminalFilter === 'all' || item.terminal === terminalFilter;
+                const priorityMatch = priorityFilter === 'all' || item.priority === priorityFilter;
+                const categoryMatch = categoryFilter === 'all' || item.category === categoryFilter;
+                const searchMatch = item.equipment.toLowerCase().includes(searchFilter);
+                
+                return terminalMatch && priorityMatch && categoryMatch && searchMatch;
+            });
+            
+            renderBreakdownTable();
+            updateStats();
+            renderCharts();
+        }
+
+        // View detail
+        function viewDetail(id) {
+            const item = breakdownData.find(d => d.id === id);
+            const modal = document.getElementById('detailModal');
+            const modalTitle = document.getElementById('detailModalTitle');
+            const detailContent = document.getElementById('detailContent');
+            
+            modalTitle.textContent = `Detail Breakdown - ${item.equipment}`;
+            
+            const durationMs = new Date() - item.startTime;
+            const durationHours = Math.floor(durationMs / (1000 * 60 * 60));
+            const durationMinutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
+            
+            let html = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-gray-700 mb-2">Informasi Alat</h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span>Nomor Alat:</span>
+                                <span class="font-semibold">${item.equipment}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Terminal:</span>
+                                <span class="font-semibold">${terminalNames[item.terminal]}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Kategori:</span>
+                                <span class="font-semibold">${categoryNames[item.category]}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-gray-700 mb-2">Status Breakdown</h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span>Prioritas:</span>
+                                <span class="priority-badge priority-${item.priority}">${item.priority.toUpperCase()}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Durasi:</span>
+                                <span class="font-semibold text-red-600">${durationHours} jam ${durationMinutes} menit</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Estimasi Perbaikan:</span>
+                                <span class="font-semibold">${item.eta}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                    <h4 class="font-semibold text-gray-700 mb-2">Detail Masalah</h4>
+                    <p class="text-sm">${item.cause}</p>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-gray-700 mb-2">Tim Penanganan</h4>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-blue-600 text-lg"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold">${item.technician}</p>
+                            <p class="text-sm text-gray-600">Lead Technician</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-2 mt-6">
+                    <button onclick="markAsRepaired(${item.id})" class="flex-1 bg-green-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-600 transition">
+                        <i class="fas fa-check mr-2"></i> Tandai Selesai
+                    </button>
+                    <button onclick="escalateIssue(${item.id})" class="flex-1 bg-orange-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-orange-600 transition">
+                        <i class="fas fa-exclamation-triangle mr-2"></i> Eskalasi
+                    </button>
+                </div>
+            `;
+            
+            detailContent.innerHTML = html;
+            modal.classList.add('active');
+        }
+
+        // Show critical only
+        function showCriticalOnly() {
+            document.getElementById('prioritySelect').value = 'critical';
+            filterBreakdowns();
+        }
+
+        // Show breakdown trend
+        function showBreakdownTrend() {
+            const modal = document.getElementById('trendModal');
+            modal.classList.add('active');
+            
+            // Simulate trend data
+            const dates = [];
+            const tjpriokData = [];
+            const tanjungperakData = [];
+            const makassarData = [];
+            const belawanData = [];
+            
+            for (let i = 29; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                dates.push(date.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' }));
+                
+                tjpriokData.push(Math.floor(Math.random() * 5));
+                tanjungperakData.push(Math.floor(Math.random() * 4));
+                makassarData.push(Math.floor(Math.random() * 3));
+                belawanData.push(Math.floor(Math.random() * 2));
+            }
+            
+            const options = {
+                series: [
+                    {
+                        name: 'Terminal Jakarta',
+                        data: tjpriokData
+                    },
+                    {
+                        name: 'Terminal Surabaya',
+                        data: tanjungperakData
+                    },
+                    {
+                        name: 'Terminal Makassar',
+                        data: makassarData
+                    },
+                    {
+                        name: 'Terminal Belawan',
+                        data: belawanData
+                    }
+                ],
+                chart: {
+                    height: 400,
+                    type: 'line',
+                    zoom: {
+                        enabled: false
+                    },
+                    toolbar: {
+                        show: false
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 3
+                },
+                colors: ['#ef4444', '#f59e0b', '#6366f1', '#10b981'],
+                xaxis: {
+                    categories: dates,
+                },
+                yaxis: {
+                    title: {
+                        text: 'Jumlah Breakdown'
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            };
+            
+            const chart = new ApexCharts(document.querySelector("#trendChart"), options);
+            chart.render();
+        }
+
+        // Send alert
+        function sendAlert() {
+            const criticalCount = filteredData.filter(item => item.priority === 'critical').length;
+            alert(`Alert dikirim ke ${criticalCount} tim penanganan untuk breakdown critical!`);
+        }
+
+        // Assign technician
+        function assignTechnician(id) {
+            alert(`Fitur assign technician untuk alat ${id} akan segera tersedia!`);
+        }
+
+        // Update status
+        function updateStatus(id) {
+            alert(`Fitur update status untuk alat ${id} akan segera tersedia!`);
+        }
+
+        // Mark as repaired
+        function markAsRepaired(id) {
+            if (confirm('Apakah Anda yakin ingin menandai alat ini sebagai selesai diperbaiki?')) {
+                alert(`Alat ${id} berhasil ditandai sebagai selesai!`);
+                closeDetailModal();
+            }
+        }
+
+        // Escalate issue
+        function escalateIssue(id) {
+            alert(`Issue alat ${id} berhasil di-eskalasi ke management!`);
+        }
+
+        // Refresh data
+        function refreshData() {
+            // Simulate data refresh
+            updateLastUpdateTime();
+            alert('Data breakdown berhasil diperbarui!');
+        }
+
+        // Start auto refresh
+        function startAutoRefresh() {
+            autoRefreshInterval = setInterval(() => {
+                updateLastUpdateTime();
+                // In a real app, this would fetch new data from the server
+            }, 30000); // Refresh every 30 seconds
+        }
+
+        // Stop auto refresh
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+        }
+
+        // Close detail modal
+        function closeDetailModal() {
+            const modal = document.getElementById('detailModal');
+            modal.classList.remove('active');
+        }
+
+        // Close trend modal
+        function closeTrendModal() {
+            const modal = document.getElementById('trendModal');
+            modal.classList.remove('active');
+        }
+
+        // Go back
+        function goBack() {
+            alert('Kembali ke halaman Dashboard');
+        }
+
+        // Export breakdown list
+        function exportBreakdownList() {
+            alert('Fitur export Excel akan segera tersedia!');
+        }
+
+        // Print report
+        function printReport() {
+            window.print();
+        }
+
+        // Close modals on outside click
+        document.getElementById('detailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDetailModal();
+            }
+        });
+
+        document.getElementById('trendModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTrendModal();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>
