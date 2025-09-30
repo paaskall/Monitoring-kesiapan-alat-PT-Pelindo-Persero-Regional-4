@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Terminal Report - PT Pelindo (Persero) Regional 4</title>
+    <title>Daily Terminal Report - PT Pelindo Terminal Petikemas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
@@ -261,7 +261,7 @@
 
         table {
             width: 100%;
-            min-width: 600px;
+            min-width: 700px;
             border-collapse: collapse;
             background: white;
         }
@@ -319,6 +319,11 @@
         
         .breakdown { 
             background: #ef4444; 
+            color: white; 
+        }
+        
+        .maintenance { 
+            background: #6366f1; 
             color: white; 
         }
 
@@ -429,6 +434,102 @@
             cursor: pointer;
         }
 
+        /* Modal Styles untuk Update Status */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #16a34a;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+        }
+
         /* Responsive Styles */
         @media (max-width: 1024px) {
             .container-grid {
@@ -453,7 +554,7 @@
             }
 
             table {
-                min-width: 500px;
+                min-width: 600px;
             }
 
             .search-box {
@@ -484,6 +585,11 @@
                 min-width: 150px;
                 font-size: 0.75rem;
             }
+
+            .modal-content {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
         }
 
         @media (max-width: 640px) {
@@ -502,7 +608,7 @@
             }
 
             table {
-                min-width: 450px;
+                min-width: 550px;
                 font-size: 0.7rem;
             }
 
@@ -550,6 +656,10 @@
             h2 {
                 font-size: 1rem !important;
             }
+
+            .modal-content {
+                padding: 1rem;
+            }
         }
 
         @media print {
@@ -574,6 +684,10 @@
             table {
                 min-width: 100%;
             }
+
+            .modal {
+                display: none !important;
+            }
         }
     </style>
 </head>
@@ -585,7 +699,7 @@
             <div class="nav-content">
                 <!-- Logo -->
                 <a href="#" class="logo">
-                    <img src="img/pelindo (1).png" alt="Pelindo Logo" class="h-10 w-auto">
+                    <img src="img/Pelindo Terminal Petikemas.png" alt="Pelindo Logo" class="h-10 w-auto">
                 </a>
 
                 <!-- Desktop Navigation -->
@@ -688,7 +802,7 @@
             </div>
 
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-4 mb-4">
-                <input type="text" id="searchBox" class="search-box" placeholder="Cari nomor alat atau keterangan...">
+                <input type="text" id="searchBox" class="search-box" placeholder="Cari nomor alat atau keterangan..." onkeyup="searchEquipment()">
                 
                 <div class="flex flex-wrap gap-2 w-full md:w-auto">
                     <button class="filter-btn active" data-filter="all" onclick="filterData('all')">Semua</button>
@@ -734,6 +848,9 @@
                         <label>
                             <input type="checkbox" class="col-toggle" data-col="4" checked> Keterangan
                         </label>
+                        <label>
+                            <input type="checkbox" class="col-toggle" data-col="5" checked> Aksi
+                        </label>
                     </div>
                 </div>
             </div>
@@ -747,6 +864,7 @@
                             <th>Nomor Alat</th>
                             <th>Status</th>
                             <th>Keterangan</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
@@ -758,7 +876,109 @@
         </div>
     </div>
 
+    <!-- Modal untuk Update Status -->
+    <div id="updateStatusModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg md:text-xl font-bold text-gray-800" id="updateModalTitle">Update Status Alat</h3>
+                <button onclick="closeUpdateModal()" class="text-gray-500 hover:text-gray-700 text-2xl font-bold">×</button>
+            </div>
+            
+            <div id="updateAlert" class="alert"></div>
+            
+            <form id="updateStatusForm">
+                <input type="hidden" id="updateEquipmentId">
+                <input type="hidden" id="updateEquipmentNumber">
+                
+                <div class="form-group">
+                    <label class="form-label">Nomor Alat</label>
+                    <div class="form-input bg-gray-100" id="displayEquipmentNumber">-</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Kategori</label>
+                    <div class="form-input bg-gray-100" id="displayEquipmentCategory">-</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Status Saat Ini</label>
+                    <div class="form-input bg-gray-100" id="displayCurrentStatus">-</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="updateStatus">Status Baru *</label>
+                    <select id="updateStatus" class="form-input" required>
+                        <option value="">Pilih Status</option>
+                        <option value="ready">Ready</option>
+                        <option value="catatan">Dengan Catatan</option>
+                        <option value="breakdown">Breakdown</option>
+                        <option value="maintenance">Maintenance</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="updateNote">Keterangan *</label>
+                    <textarea id="updateNote" class="form-textarea" placeholder="Masukkan keterangan status..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="updateTechnician">Teknisi</label>
+                    <input type="text" id="updateTechnician" class="form-input" placeholder="Nama teknisi (opsional)">
+                </div>
+                
+                <div class="flex gap-2 mt-6">
+                    <button type="submit" class="flex-1 bg-green-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-600 transition">
+                        <i class="fas fa-save mr-2"></i>Update Status
+                    </button>
+                    <button type="button" onclick="closeUpdateModal()" class="flex-1 bg-gray-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-600 transition">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
+        // Data lengkap peralatan
+        const equipmentData = [
+            // Jakarta
+            { id: 1, category: 'dermaga', number: 'QC-001', status: 'ready', note: 'Kondisi optimal, siap operasi', branch: 'jakarta' },
+            { id: 2, category: 'dermaga', number: 'QC-002', status: 'ready', note: 'Maintenance rutin selesai', branch: 'jakarta' },
+            { id: 3, category: 'dermaga', number: 'QC-003', status: 'catatan', note: 'Perlu pengecekan hydraulic system', branch: 'jakarta' },
+            { id: 4, category: 'cy', number: 'RTG-001', status: 'ready', note: 'Siap operasi penuh', branch: 'jakarta' },
+            { id: 5, category: 'cy', number: 'RTG-002', status: 'ready', note: 'Kondisi mesin excellent', branch: 'jakarta' },
+            
+            // Surabaya
+            { id: 6, category: 'dermaga', number: 'QC-004', status: 'ready', note: 'Siap operasi 24 jam', branch: 'surabaya' },
+            { id: 7, category: 'dermaga', number: 'QC-005', status: 'breakdown', note: 'Motor penggerak rusak, dalam perbaikan', branch: 'surabaya' },
+            { id: 8, category: 'cy', number: 'RTG-003', status: 'catatan', note: 'Sistem elektrik perlu monitoring', branch: 'surabaya' },
+            { id: 9, category: 'cy', number: 'RTG-004', status: 'ready', note: 'Baru selesai overhaul', branch: 'surabaya' },
+            
+            // Makassar 1
+            { id: 10, category: 'mobile', number: 'RH-001', status: 'ready', note: 'Siap operasi', branch: 'makassar1' },
+            { id: 11, category: 'mobile', number: 'RH-002', status: 'ready', note: 'Maintenance schedule up to date', branch: 'makassar1' },
+            { id: 12, category: 'angkut', number: 'TT-001', status: 'ready', note: 'Siap angkut container', branch: 'makassar1' },
+            { id: 13, category: 'angkut', number: 'TT-002', status: 'ready', note: 'Kondisi ban bagus', branch: 'makassar1' },
+            
+            // Makassar 2
+            { id: 14, category: 'dermaga', number: 'QC-006', status: 'ready', note: 'Kondisi baik', branch: 'makassar2' },
+            { id: 15, category: 'cy', number: 'RTG-005', status: 'breakdown', note: 'Kerusakan spreader, sedang diperbaiki', branch: 'makassar2' },
+            { id: 16, category: 'cy', number: 'RTG-006', status: 'ready', note: 'Operasional lancar', branch: 'makassar2' },
+            
+            // Manado
+            { id: 17, category: 'mobile', number: 'RH-003', status: 'catatan', note: 'Perlu inspeksi ban dalam 3 hari', branch: 'manado' },
+            { id: 18, category: 'mobile', number: 'RH-004', status: 'ready', note: 'Kondisi prima', branch: 'manado' },
+            { id: 19, category: 'angkut', number: 'TT-003', status: 'catatan', note: 'Rem depan perlu adjustment', branch: 'manado' },
+            { id: 20, category: 'angkut', number: 'TT-004', status: 'breakdown', note: 'Transmisi rusak, menunggu spare part', branch: 'manado' }
+        ];
+
+        // Variabel global untuk data yang difilter
+        let filteredData = [...equipmentData];
+        let currentFilter = 'all';
+        let currentCategory = 'all';
+        let currentBranch = 'all';
+        let currentSearch = '';
+
         // Navbar functionality
         function initNavbar() {
             const navbar = document.getElementById('navbar');
@@ -810,237 +1030,162 @@
             });
         }
 
-        // Initialize navbar when page loads
-        document.addEventListener('DOMContentLoaded', initNavbar);
-
-        // Sample data dengan informasi cabang
-        const equipmentData = [
-            // Jakarta
-            { category: 'dermaga', number: 'QC-001', status: 'ready', note: 'Kondisi optimal, siap operasi', branch: 'jakarta' },
-            { category: 'dermaga', number: 'QC-002', status: 'ready', note: 'Maintenance rutin selesai', branch: 'jakarta' },
-            { category: 'dermaga', number: 'QC-003', status: 'catatan', note: 'Perlu pengecekan hydraulic system', branch: 'jakarta' },
-            { category: 'cy', number: 'RTG-001', status: 'ready', note: 'Siap operasi penuh', branch: 'jakarta' },
-            { category: 'cy', number: 'RTG-002', status: 'ready', note: 'Kondisi mesin excellent', branch: 'jakarta' },
-            
-            // Surabaya
-            { category: 'dermaga', number: 'QC-004', status: 'ready', note: 'Siap operasi 24 jam', branch: 'surabaya' },
-            { category: 'dermaga', number: 'QC-005', status: 'breakdown', note: 'Motor penggerak rusak, dalam perbaikan', branch: 'surabaya' },
-            { category: 'cy', number: 'RTG-003', status: 'catatan', note: 'Sistem elektrik perlu monitoring', branch: 'surabaya' },
-            { category: 'cy', number: 'RTG-004', status: 'ready', note: 'Baru selesai overhaul', branch: 'surabaya' },
-            
-            // Makassar 1
-            { category: 'mobile', number: 'RH-001', status: 'ready', note: 'Siap operasi', branch: 'makassar1' },
-            { category: 'mobile', number: 'RH-002', status: 'ready', note: 'Maintenance schedule up to date', branch: 'makassar1' },
-            { category: 'angkut', number: 'TT-001', status: 'ready', note: 'Siap angkut container', branch: 'makassar1' },
-            { category: 'angkut', number: 'TT-002', status: 'ready', note: 'Kondisi ban bagus', branch: 'makassar1' },
-            
-            // Makassar 2
-            { category: 'dermaga', number: 'QC-006', status: 'ready', note: 'Kondisi baik', branch: 'makassar2' },
-            { category: 'cy', number: 'RTG-005', status: 'breakdown', note: 'Kerusakan spreader, sedang diperbaiki', branch: 'makassar2' },
-            { category: 'cy', number: 'RTG-006', status: 'ready', note: 'Operasional lancar', branch: 'makassar2' },
-            
-            // Manado
-            { category: 'mobile', number: 'RH-003', status: 'catatan', note: 'Perlu inspeksi ban dalam 3 hari', branch: 'manado' },
-            { category: 'mobile', number: 'RH-004', status: 'ready', note: 'Kondisi prima', branch: 'manado' },
-            { category: 'angkut', number: 'TT-003', status: 'catatan', note: 'Rem depan perlu adjustment', branch: 'manado' },
-            { category: 'angkut', number: 'TT-004', status: 'ready', note: 'Baru service lengkap', branch: 'manado' },
-            
-            // Data tambahan untuk kelengkapan
-            { category: 'dermaga', number: 'CC-001', status: 'ready', note: 'Operasional normal', branch: 'jakarta' },
-            { category: 'dermaga', number: 'CC-002', status: 'catatan', note: 'Ban perlu diganti minggu depan', branch: 'surabaya' },
-            { category: 'cy', number: 'RS-001', status: 'ready', note: 'Siap pakai', branch: 'makassar1' },
-            { category: 'cy', number: 'RS-002', status: 'catatan', note: 'Oli mesin perlu diganti', branch: 'makassar2' },
-            { category: 'cy', number: 'RS-003', status: 'ready', note: 'Kondisi optimal', branch: 'manado' },
-            { category: 'cy', number: 'RS-004', status: 'breakdown', note: 'Sistem hydraulic bocor', branch: 'jakarta' },
-            { category: 'mobile', number: 'FL-001', status: 'ready', note: 'Operasional normal', branch: 'surabaya' },
-            { category: 'mobile', number: 'FL-002', status: 'catatan', note: 'Battery lemah, perlu charging', branch: 'makassar1' },
-            { category: 'angkut', number: 'TT-005', status: 'breakdown', note: 'Transmisi bermasalah', branch: 'makassar2' },
-            { category: 'angkut', number: 'TT-006', status: 'ready', note: 'Operasional 100%', branch: 'manado' },
-            { category: 'angkut', number: 'HT-001', status: 'ready', note: 'Siap operasi', branch: 'jakarta' },
-            { category: 'angkut', number: 'HT-002', status: 'catatan', note: 'Lampu sein kanan mati', branch: 'surabaya' },
-            { category: 'angkut', number: 'HT-003', status: 'ready', note: 'Kondisi excellent', branch: 'makassar1' },
-            { category: 'angkut', number: 'HT-004', status: 'breakdown', note: 'Engine overheating, dalam perbaikan', branch: 'makassar2' },
-        ];
-
-        let currentFilter = 'all';
-        let currentCategory = 'all';
-        let currentBranch = 'all';
-        let filteredData = [...equipmentData];
-
-        const categoryNames = {
-            'dermaga': 'Alat Dermaga',
-            'cy': 'Alat CY',
-            'mobile': 'Alat Mobile',
-            'angkut': 'Alat Angkut'
-        };
-
-        const statusNames = {
-            'ready': 'Ready',
-            'catatan': 'Dengan Catatan',
-            'breakdown': 'Breakdown'
-        };
-
-        const branchNames = {
-            'jakarta': 'Terminal Jakarta',
-            'surabaya': 'Terminal Surabaya',
-            'makassar1': 'Terminal Makassar 1',
-            'makassar2': 'Terminal Makassar 2',
-            'manado': 'Terminal Manado'
-        };
-
-        // Initialize
-        function init() {
-            updateDate();
-            updateSummary();
-            renderTable();
-            setupSearch();
-            setupColumnVisibility();
-            updateTerminalName();
-        }
-
-        // Update terminal name berdasarkan cabang yang dipilih
-        function updateTerminalName() {
-            const branchSelect = document.getElementById('branchFilter');
-            const selectedBranch = branchSelect.value;
-            const terminalNameElement = document.getElementById('terminalName');
-            
-            if (selectedBranch === 'all') {
-                terminalNameElement.textContent = 'Semua Terminal';
-            } else {
-                terminalNameElement.textContent = branchNames[selectedBranch];
-            }
-        }
-
-        // Update date
-        function updateDate() {
+        // Initialize the report
+        function initReport() {
+            // Set current date
             const now = new Date();
-            const formatted = now.toLocaleDateString('id-ID', {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-            document.getElementById('reportDate').textContent = formatted;
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('reportDate').textContent = now.toLocaleDateString('id-ID', options);
+            
+            // Initialize navbar
+            initNavbar();
+            
+            // Initialize dropdown functionality
+            initDropdowns();
+            
+            // Render table
+            renderTable();
+            
+            // Update summary cards
+            updateSummaryCards();
         }
 
-        // Calculate totals
-        function calculateTotals() {
-            let totals = {
-                ready: 0,
-                catatan: 0,
-                breakdown: 0
-            };
-
-            filteredData.forEach(item => {
-                totals[item.status]++;
-            });
-
-            return totals;
-        }
-
-        // Update summary cards
-        function updateSummary() {
-            const totals = calculateTotals();
-            const totalAlat = totals.ready + totals.catatan + totals.breakdown;
-
-            document.getElementById('totalAlat').textContent = totalAlat.toLocaleString();
-            document.getElementById('totalReady').textContent = totals.ready.toLocaleString();
-            document.getElementById('totalCatatan').textContent = totals.catatan.toLocaleString();
-            document.getElementById('totalBreakdown').textContent = totals.breakdown.toLocaleString();
-        }
-
-        // Setup column visibility dropdown
-        function setupColumnVisibility() {
-            const dropdownBtn = document.getElementById("colDropdownBtn");
-            const dropdownMenu = document.getElementById("colDropdownMenu");
-
-            // Toggle dropdown
-            dropdownBtn.addEventListener("click", (e) => {
+        // Initialize dropdown functionality
+        function initDropdowns() {
+            const colDropdownBtn = document.getElementById('colDropdownBtn');
+            const colDropdownMenu = document.getElementById('colDropdownMenu');
+            
+            // Toggle column dropdown
+            colDropdownBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                dropdownMenu.classList.toggle("hidden");
+                colDropdownMenu.classList.toggle('hidden');
             });
-
+            
             // Close dropdown when clicking outside
-            document.addEventListener("click", (event) => {
-                if (!dropdownBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                    dropdownMenu.classList.add("hidden");
-                }
+            document.addEventListener('click', () => {
+                colDropdownMenu.classList.add('hidden');
             });
-
-            // Prevent dropdown from closing when clicking inside
-            dropdownMenu.addEventListener("click", (e) => {
-                e.stopPropagation();
-            });
-
-            // Checkbox logic
-            const checkboxes = document.querySelectorAll(".col-toggle");
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener("change", function() {
-                    toggleColumn(parseInt(this.dataset.col), this.checked);
+            
+            // Handle column toggle
+            const colToggles = document.querySelectorAll('.col-toggle');
+            colToggles.forEach(toggle => {
+                toggle.addEventListener('change', (e) => {
+                    const colIndex = e.target.getAttribute('data-col');
+                    const table = document.getElementById('reportTable');
+                    const th = table.querySelectorAll('thead th')[colIndex];
+                    const tds = table.querySelectorAll(`tbody td:nth-child(${parseInt(colIndex) + 1})`);
+                    
+                    if (e.target.checked) {
+                        th.style.display = '';
+                        tds.forEach(td => td.style.display = '');
+                    } else {
+                        th.style.display = 'none';
+                        tds.forEach(td => td.style.display = 'none');
+                    }
                 });
             });
         }
 
-        // Toggle specific column
-        function toggleColumn(colIndex, visible) {
-            const table = document.getElementById("reportTable");
-            const rows = table.querySelectorAll("tr");
-
-            rows.forEach(row => {
-                const cells = row.querySelectorAll("th, td");
-                if (cells[colIndex]) {
-                    cells[colIndex].style.display = visible ? "" : "none";
-                }
-            });
-        }
-
-        // Render table
+        // Render table with data
         function renderTable() {
-            const tbody = document.getElementById('tableBody');
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
             
             if (filteredData.length === 0) {
-                tbody.innerHTML = `
+                tableBody.innerHTML = `
                     <tr>
-                        <td colspan="5" class="text-center text-gray-500 py-8">
+                        <td colspan="6" class="text-center py-4 text-gray-500">
                             Tidak ada data yang sesuai dengan filter
                         </td>
                     </tr>
                 `;
-                document.getElementById('resultCount').textContent = 'Tidak ada data ditemukan';
+                document.getElementById('resultCount').textContent = 'Menampilkan 0 dari 0 hasil';
                 return;
             }
-
-            tbody.innerHTML = filteredData.map((item, index) => `
-                <tr>
-                    <td class="font-semibold text-gray-600">${index + 1}</td>
+            
+            filteredData.forEach((equipment, index) => {
+                const row = document.createElement('tr');
+                
+                // Determine status badge class
+                let statusClass = '';
+                let statusText = '';
+                switch(equipment.status) {
+                    case 'ready':
+                        statusClass = 'ready';
+                        statusText = 'Ready';
+                        break;
+                    case 'catatan':
+                        statusClass = 'catatan';
+                        statusText = 'Dengan Catatan';
+                        break;
+                    case 'breakdown':
+                        statusClass = 'breakdown';
+                        statusText = 'Breakdown';
+                        break;
+                    case 'maintenance':
+                        statusClass = 'maintenance';
+                        statusText = 'Maintenance';
+                        break;
+                }
+                
+                // Determine category text
+                let categoryText = '';
+                switch(equipment.category) {
+                    case 'dermaga':
+                        categoryText = 'Dermaga';
+                        break;
+                    case 'cy':
+                        categoryText = 'CY';
+                        break;
+                    case 'mobile':
+                        categoryText = 'Mobile';
+                        break;
+                    case 'angkut':
+                        categoryText = 'Angkut';
+                        break;
+                }
+                
+                row.innerHTML = `
+                    <td>${index + 1}</td>
                     <td>
-                        <span class="category-tag">${categoryNames[item.category]}</span>
+                        <span class="category-tag">${categoryText}</span>
                     </td>
-                    <td class="font-bold text-gray-800">${item.number}</td>
+                    <td class="font-semibold">${equipment.number}</td>
                     <td>
-                        <span class="status-badge ${item.status}">${statusNames[item.status]}</span>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
                     </td>
-                    <td class="text-gray-700">${item.note}</td>
-                </tr>
-            `).join('');
-
-            document.getElementById('resultCount').textContent = 
-                `Menampilkan ${filteredData.length} dari ${equipmentData.length} data`;
+                    <td>${equipment.note}</td>
+                    <td>
+                        <button onclick="openUpdateModal(${equipment.id})" class="bg-blue-500 text-white px-3 py-1 rounded text-xs hover:bg-blue-600 transition">
+                            <i class="fas fa-edit mr-1"></i>Update
+                        </button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            document.getElementById('resultCount').textContent = `Menampilkan ${filteredData.length} dari ${equipmentData.length} hasil`;
         }
 
-        // Filter by branch
-        function filterByBranch() {
-            const branchSelect = document.getElementById('branchFilter');
-            currentBranch = branchSelect.value;
-            updateTerminalName();
-            applyFilters();
+        // Update summary cards
+        function updateSummaryCards() {
+            const totalAlat = equipmentData.length;
+            const totalReady = equipmentData.filter(e => e.status === 'ready').length;
+            const totalCatatan = equipmentData.filter(e => e.status === 'catatan').length;
+            const totalBreakdown = equipmentData.filter(e => e.status === 'breakdown').length;
+            
+            document.getElementById('totalAlat').textContent = totalAlat;
+            document.getElementById('totalReady').textContent = totalReady;
+            document.getElementById('totalCatatan').textContent = totalCatatan;
+            document.getElementById('totalBreakdown').textContent = totalBreakdown;
         }
 
-        // Filter by status
+        // Filter data by status
         function filterData(status) {
             currentFilter = status;
             
-            // Update button states
+            // Update active button
             document.querySelectorAll('[data-filter]').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -1053,7 +1198,7 @@
         function filterCategory(category) {
             currentCategory = category;
             
-            // Update button states
+            // Update active button
             document.querySelectorAll('[data-category]').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -1062,34 +1207,146 @@
             applyFilters();
         }
 
+        // Filter by branch
+        function filterByBranch() {
+            currentBranch = document.getElementById('branchFilter').value;
+            applyFilters();
+        }
+
+        // Search equipment
+        function searchEquipment() {
+            currentSearch = document.getElementById('searchBox').value.toLowerCase();
+            applyFilters();
+        }
+
         // Apply all filters
         function applyFilters() {
-            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
-            
-            filteredData = equipmentData.filter(item => {
-                const matchStatus = currentFilter === 'all' || item.status === currentFilter;
-                const matchCategory = currentCategory === 'all' || item.category === currentCategory;
-                const matchBranch = currentBranch === 'all' || item.branch === currentBranch;
-                const matchSearch = item.number.toLowerCase().includes(searchTerm) || 
-                                  item.note.toLowerCase().includes(searchTerm);
+            filteredData = equipmentData.filter(equipment => {
+                // Filter by status
+                if (currentFilter !== 'all' && equipment.status !== currentFilter) {
+                    return false;
+                }
                 
-                return matchStatus && matchCategory && matchBranch && matchSearch;
+                // Filter by category
+                if (currentCategory !== 'all' && equipment.category !== currentCategory) {
+                    return false;
+                }
+                
+                // Filter by branch
+                if (currentBranch !== 'all' && equipment.branch !== currentBranch) {
+                    return false;
+                }
+                
+                // Filter by search term
+                if (currentSearch && 
+                    !equipment.number.toLowerCase().includes(currentSearch) && 
+                    !equipment.note.toLowerCase().includes(currentSearch)) {
+                    return false;
+                }
+                
+                return true;
             });
             
-            updateSummary();
             renderTable();
         }
 
-        // Setup search
-        function setupSearch() {
-            const searchBox = document.getElementById('searchBox');
-            searchBox.addEventListener('input', applyFilters);
+        // Open update modal
+        function openUpdateModal(equipmentId) {
+            const equipment = equipmentData.find(e => e.id === equipmentId);
+            if (!equipment) return;
+            
+            document.getElementById('updateEquipmentId').value = equipment.id;
+            document.getElementById('updateEquipmentNumber').value = equipment.number;
+            document.getElementById('displayEquipmentNumber').textContent = equipment.number;
+            
+            // Set category text
+            let categoryText = '';
+            switch(equipment.category) {
+                case 'dermaga':
+                    categoryText = 'Dermaga';
+                    break;
+                case 'cy':
+                    categoryText = 'CY';
+                    break;
+                case 'mobile':
+                    categoryText = 'Mobile';
+                    break;
+                case 'angkut':
+                    categoryText = 'Angkut';
+                    break;
+            }
+            document.getElementById('displayEquipmentCategory').textContent = categoryText;
+            
+            // Set current status
+            let statusText = '';
+            switch(equipment.status) {
+                case 'ready':
+                    statusText = 'Ready';
+                    break;
+                case 'catatan':
+                    statusText = 'Dengan Catatan';
+                    break;
+                case 'breakdown':
+                    statusText = 'Breakdown';
+                    break;
+                case 'maintenance':
+                    statusText = 'Maintenance';
+                    break;
+            }
+            document.getElementById('displayCurrentStatus').textContent = statusText;
+            
+            // Reset form
+            document.getElementById('updateStatus').value = '';
+            document.getElementById('updateNote').value = '';
+            document.getElementById('updateTechnician').value = '';
+            
+            // Show modal
+            document.getElementById('updateStatusModal').classList.add('active');
         }
 
-        // Export to Excel
+        // Close update modal
+        function closeUpdateModal() {
+            document.getElementById('updateStatusModal').classList.remove('active');
+            document.getElementById('updateAlert').style.display = 'none';
+        }
+
+        // Handle form submission
+        document.getElementById('updateStatusForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const equipmentId = parseInt(document.getElementById('updateEquipmentId').value);
+            const newStatus = document.getElementById('updateStatus').value;
+            const newNote = document.getElementById('updateNote').value;
+            const technician = document.getElementById('updateTechnician').value;
+            
+            // Find equipment index
+            const equipmentIndex = equipmentData.findIndex(e => e.id === equipmentId);
+            if (equipmentIndex === -1) return;
+            
+            // Update equipment data
+            equipmentData[equipmentIndex].status = newStatus;
+            equipmentData[equipmentIndex].note = newNote + (technician ? ` (Teknisi: ${technician})` : '');
+            
+            // Show success message
+            const alert = document.getElementById('updateAlert');
+            alert.textContent = 'Status berhasil diperbarui!';
+            alert.className = 'alert alert-success';
+            alert.style.display = 'block';
+            
+            // Update table and summary cards
+            applyFilters();
+            updateSummaryCards();
+            
+            // Close modal after 2 seconds
+            setTimeout(() => {
+                closeUpdateModal();
+            }, 2000);
+        });
+
+        // Export report
         function exportReport() {
-            alert('Fitur export Excel akan segera tersedia!\n\nData yang akan diexport:\n- Total: ' + 
-                  filteredData.length + ' alat\n- Format: Excel (.xlsx)');
+            // In a real application, this would generate a file for download
+            alert('Fitur export akan mengunduh laporan dalam format Excel/PDF');
         }
 
         // Print report
@@ -1097,8 +1354,8 @@
             window.print();
         }
 
-        // Initialize on load
-        init();
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initReport);
     </script>
 </body>
 </html>
