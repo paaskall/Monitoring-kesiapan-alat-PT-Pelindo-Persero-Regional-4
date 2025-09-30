@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring Kesiapan Alat - PT Pelindo Terminal Petikemas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-scrolled {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: #4b5563;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: #1e40af;
+            background-color: #f3f4f6;
+        }
+
+        .nav-link.active {
+            color: #1e40af;
+            background-color: #dbeafe;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 1rem;
+            right: 1rem;
+            height: 2px;
+            background-color: #1e40af;
+            border-radius: 2px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .user-info:hover {
+            background-color: #f3f4f6;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.875rem;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .mobile-menu-button {
+            display: none;
+            background: none;
+            border: none;
+            color: #4b5563;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+
+        .mobile-menu-button:hover {
+            background-color: #f3f4f6;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 80px;
+            }
+
+            .nav-content {
+                height: 60px;
+            }
+
+            .mobile-menu-button {
+                display: block;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                gap: 0;
+                transform: translateY(-10px);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .nav-link {
+                width: 100%;
+                justify-content: flex-start;
+                padding: 1rem;
+                border-radius: 6px;
+                margin-bottom: 0.25rem;
+            }
+
+            .user-menu {
+                display: none;
+            }
+
+            .logo-text {
+                font-size: 1.125rem;
+            }
+
+            .logo-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 1.125rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 0 0.75rem;
+            }
+
+            .logo-text span {
+                display: none;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa; 
+            min-height: 100vh;
+            padding-top: 70px;
+        }
+
+        .container-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+
+        .card {
+            background: whitesmoke;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .ready { background: #10b981; color: white; }
+        .catatan { background: #f59e0b; color: white; }
+        .breakdown { background: #ef4444; color: white; }
+
+        .terminal-item {
+            background-color: rgb(21, 135, 241);
+            color: white;
+            border-radius: 10px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .terminal-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .container-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-bar {
+            height: 30px;
+            border-radius: 5px;
+            display: flex;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .chart-segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-6 lg:p-20">
+    <!-- Fixed Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-content">
+                <!-- Logo -->
+                <a href="#" class="logo">
+                    <img src="img/Pelindo Terminal Petikemas.png" alt="Pelindo Logo" class="h-10 w-auto">
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html" class="nav-link active">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                     <a href="daily_report.html" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Daily Report</span>
+                    </a>
+                    <a href="monthly_report.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Monthly Report</span>
+                    </a>
+                    <a href="equipment_status_history.html" class="nav-link">
+                        <i class="fas fa-history"></i>
+                        <span>Equipment History</span>
+                    </a>
+                    <a href="breakdown_list.html" class="nav-link">
+                        <i class="fas fa-triangle-exclamation"></i>
+                        <span>Breakdown List</span>
+                    </a>
+                </div>
+
+                <!-- User Menu -->
+                <div class="user-menu">
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            AS
+                        </div>
+                        <div class="user-details">
+                            <div class="user-name">Admin Supervisor</div>
+                            <div class="user-role">Terminal Manager</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-button" id="mobileMenuButton">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6 mt-20">
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">MONITORING KESIAPAN ALAT</h1>
+                <h2 class="text-xl md:text-2xl font-semibold text-blue-600">PT PELINDO TERMINAL PETIKEMAS</h2>
+                <p class="text-gray-600 mt-2">Monitoring 30 Terminal Petikemas</p>
+                <p class="text-sm text-gray-500 mt-1">Terakhir diperbarui: <span id="lastUpdate"></span></p>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="container-grid mb-6">
+            <div class="card bg-gradient-to-br from-green-500 to-green-600 text-white">
+                <h3 class="text-lg font-semibold mb-2">Total Alat</h3>
+                <p class="text-4xl font-bold" id="totalAlat">0</p>
+            </div>
+            <div class="card bg-gradient-to-br from-emerald-500 to-emerald-600 text-white">
+                <h3 class="text-lg font-semibold mb-2">Ready</h3>
+                <p class="text-4xl font-bold" id="totalReady">0</p>
+            </div>
+            <div class="card bg-gradient-to-br from-amber-500 to-amber-600 text-white">
+                <h3 class="text-lg font-semibold mb-2">Dengan Catatan</h3>
+                <p class="text-4xl font-bold" id="totalCatatan">0</p>
+            </div>
+            <div class="card bg-gradient-to-br from-red-500 to-red-600 text-white">
+                <h3 class="text-lg font-semibold mb-2">Breakdown</h3>
+                <p class="text-4xl font-bold" id="totalBreakdown">0</p>
+            </div>
+        </div>
+
+        <!-- Status Chart -->
+        <div class="card mb-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Status Keseluruhan Alat</h3>
+            <div class="chart-bar" id="overallChart"></div>
+            <div class="flex justify-around mt-4 flex-wrap gap-2">
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-green-500 rounded mr-2"></div>
+                    <span class="text-sm">Ready: <span id="readyPercent">0</span>%</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-amber-500 rounded mr-2"></div>
+                    <span class="text-sm">Dengan Catatan: <span id="catatanPercent">0</span>%</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-red-500 rounded mr-2"></div>
+                    <span class="text-sm">Breakdown: <span id="breakdownPercent">0</span>%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Summary -->
+        <div class="card mb-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Summary Berdasarkan Kategori</h3>
+            <div class="category-grid" id="categoryContainer"></div>
+        </div>
+
+        <!-- Terminal List -->
+        <div class="card">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Daftar Terminal</h3>
+            <div class="container-grid" id="terminalContainer"></div>
+        </div>
+    </div>
+
+    <script>
+
+    // Navbar functionality
+    function initNavbar() {
+        const navbar = document.getElementById('navbar');
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const navLinks = document.getElementById('navLinks');
+
+        // Scroll effect
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                navbar.classList.add('navbar-scrolled');
+            } else {
+                navbar.classList.remove('navbar-scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        mobileMenuButton.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            
+            // Change icon
+            const icon = mobileMenuButton.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navbar.contains(e.target) && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                const icon = mobileMenuButton.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Close mobile menu when window is resized to desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                navLinks.classList.remove('active');
+                const icon = mobileMenuButton.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+    }
+
+    // Initialize navbar when page loads
+    document.addEventListener('DOMContentLoaded', initNavbar);
+
+        // Data simulasi untuk 30 terminal
+        const terminals = [
+            { id: 1, name: 'Terminal Jakarta', alat: { dermaga: {ready: 8, catatan: 2, breakdown: 1}, cy: {ready: 15, catatan: 3, breakdown: 2}, mobile: {ready: 5, catatan: 1, breakdown: 0}, angkut: {ready: 20, catatan: 4, breakdown: 2} }},
+            { id: 2, name: 'Terminal Surabaya', alat: { dermaga: {ready: 10, catatan: 1, breakdown: 0}, cy: {ready: 18, catatan: 2, breakdown: 1}, mobile: {ready: 6, catatan: 0, breakdown: 1}, angkut: {ready: 22, catatan: 3, breakdown: 1} }},
+            { id: 3, name: 'Terminal Semarang', alat: { dermaga: {ready: 6, catatan: 2, breakdown: 1}, cy: {ready: 12, catatan: 3, breakdown: 2}, mobile: {ready: 4, catatan: 1, breakdown: 1}, angkut: {ready: 15, catatan: 2, breakdown: 2} }},
+            { id: 4, name: 'Terminal Makassar', alat: { dermaga: {ready: 7, catatan: 1, breakdown: 1}, cy: {ready: 14, catatan: 2, breakdown: 1}, mobile: {ready: 5, catatan: 1, breakdown: 0}, angkut: {ready: 18, catatan: 3, breakdown: 1} }},
+            { id: 5, name: 'Terminal Medan', alat: { dermaga: {ready: 9, catatan: 2, breakdown: 0}, cy: {ready: 16, catatan: 3, breakdown: 1}, mobile: {ready: 5, catatan: 0, breakdown: 1}, angkut: {ready: 19, catatan: 2, breakdown: 2} }},
+            { id: 6, name: 'Terminal Belawan', alat: { dermaga: {ready: 8, catatan: 1, breakdown: 1}, cy: {ready: 15, catatan: 2, breakdown: 2}, mobile: {ready: 6, catatan: 1, breakdown: 0}, angkut: {ready: 20, catatan: 4, breakdown: 1} }},
+            { id: 7, name: 'Terminal Palembang', alat: { dermaga: {ready: 5, catatan: 2, breakdown: 1}, cy: {ready: 10, catatan: 3, breakdown: 2}, mobile: {ready: 3, catatan: 1, breakdown: 1}, angkut: {ready: 14, catatan: 3, breakdown: 2} }},
+            { id: 8, name: 'Terminal Banjarmasin', alat: { dermaga: {ready: 6, catatan: 1, breakdown: 0}, cy: {ready: 11, catatan: 2, breakdown: 1}, mobile: {ready: 4, catatan: 0, breakdown: 1}, angkut: {ready: 16, catatan: 2, breakdown: 1} }},
+            { id: 9, name: 'Terminal Pontianak', alat: { dermaga: {ready: 5, catatan: 2, breakdown: 1}, cy: {ready: 9, catatan: 2, breakdown: 2}, mobile: {ready: 3, catatan: 1, breakdown: 1}, angkut: {ready: 13, catatan: 3, breakdown: 2} }},
+            { id: 10, name: 'Terminal Balikpapan', alat: { dermaga: {ready: 7, catatan: 1, breakdown: 1}, cy: {ready: 13, catatan: 2, breakdown: 1}, mobile: {ready: 5, catatan: 1, breakdown: 0}, angkut: {ready: 17, catatan: 2, breakdown: 2} }},
+            { id: 11, name: 'Terminal Samarinda', alat: { dermaga: {ready: 6, catatan: 2, breakdown: 0}, cy: {ready: 12, catatan: 3, breakdown: 1}, mobile: {ready: 4, catatan: 1, breakdown: 1}, angkut: {ready: 15, catatan: 3, breakdown: 1} }},
+            { id: 12, name: 'Terminal Manado', alat: { dermaga: {ready: 5, catatan: 1, breakdown: 1}, cy: {ready: 10, catatan: 2, breakdown: 2}, mobile: {ready: 3, catatan: 1, breakdown: 1}, angkut: {ready: 14, catatan: 2, breakdown: 2} }},
+            { id: 13, name: 'Terminal Palu', alat: { dermaga: {ready: 4, catatan: 2, breakdown: 1}, cy: {ready: 8, catatan: 2, breakdown: 1}, mobile: {ready: 3, catatan: 0, breakdown: 1}, angkut: {ready: 12, catatan: 3, breakdown: 1} }},
+            { id: 14, name: 'Terminal Kendari', alat: { dermaga: {ready: 5, catatan: 1, breakdown: 1}, cy: {ready: 9, catatan: 3, breakdown: 1}, mobile: {ready: 3, catatan: 1, breakdown: 1}, angkut: {ready: 13, catatan: 2, breakdown: 2} }},
+            { id: 15, name: 'Terminal Ambon', alat: { dermaga: {ready: 4, catatan: 2, breakdown: 0}, cy: {ready: 7, catatan: 2, breakdown: 2}, mobile: {ready: 2, catatan: 1, breakdown: 1}, angkut: {ready: 11, catatan: 3, breakdown: 1} }},
+            { id: 16, name: 'Terminal Sorong', alat: { dermaga: {ready: 5, catatan: 1, breakdown: 1}, cy: {ready: 8, catatan: 2, breakdown: 1}, mobile: {ready: 3, catatan: 1, breakdown: 0}, angkut: {ready: 12, catatan: 2, breakdown: 2} }},
+            { id: 17, name: 'Terminal Jayapura', alat: { dermaga: {ready: 4, catatan: 2, breakdown: 1}, cy: {ready: 7, catatan: 3, breakdown: 2}, mobile: {ready: 2, catatan: 1, breakdown: 1}, angkut: {ready: 10, catatan: 3, breakdown: 2} }},
+            { id: 18, name: 'Terminal Bitung', alat: { dermaga: {ready: 6, catatan: 1, breakdown: 1}, cy: {ready: 11, catatan: 2, breakdown: 1}, mobile: {ready: 4, catatan: 1, breakdown: 1}, angkut: {ready: 15, catatan: 2, breakdown: 1} }},
+            { id: 19, name: 'Terminal Kupang', alat: { dermaga: {ready: 5, catatan: 2, breakdown: 0}, cy: {ready: 9, catatan: 2, breakdown: 2}, mobile: {ready: 3, catatan: 1, breakdown: 1}, angkut: {ready: 13, catatan: 3, breakdown: 1} }},
+            { id: 20, name: 'Terminal Bali', alat: { dermaga: {ready: 7, catatan: 1, breakdown: 1}, cy: {ready: 13, catatan: 2, breakdown: 1}, mobile: {ready: 5, catatan: 1, breakdown: 0}, angkut: {ready: 17, catatan: 3, breakdown: 2} }},
+            { id: 21, name: 'Terminal Lombok', alat: { dermaga: {ready: 5, catatan: 2, breakdown: 1}, cy: {ready: 10, catatan: 3, breakdown: 1}, mobile: {ready: 3, catatan: 1, breakdown: 1}, angkut: {ready: 14, catatan: 2, breakdown: 2} }},
+            { id: 22, name: 'Terminal Bima', alat: { dermaga: {ready: 4, catatan: 1, breakdown: 1}, cy: {ready: 8, catatan: 2, breakdown: 2}, mobile: {ready: 3, catatan: 1, breakdown: 1}, angkut: {ready: 11, catatan: 3, breakdown: 1} }},
+            { id: 23, name: 'Terminal Batam', alat: { dermaga: {ready: 8, catatan: 2, breakdown: 0}, cy: {ready: 14, catatan: 2, breakdown: 1}, mobile: {ready: 5, catatan: 0, breakdown: 1}, angkut: {ready: 18, catatan: 3, breakdown: 1} }},
+            { id: 24, name: 'Terminal Tanjung Priok', alat: { dermaga: {ready: 10, catatan: 2, breakdown: 1}, cy: {ready: 20, catatan: 3, breakdown: 2}, mobile: {ready: 7, catatan: 1, breakdown: 1}, angkut: {ready: 25, catatan: 4, breakdown: 2} }},
+            { id: 25, name: 'Terminal Tanjung Perak', alat: { dermaga: {ready: 9, catatan: 1, breakdown: 1}, cy: {ready: 17, catatan: 3, breakdown: 2}, mobile: {ready: 6, catatan: 1, breakdown: 1}, angkut: {ready: 21, catatan: 3, breakdown: 2} }},
+            { id: 26, name: 'Terminal Lampung', alat: { dermaga: {ready: 6, catatan: 2, breakdown: 1}, cy: {ready: 11, catatan: 2, breakdown: 1}, mobile: {ready: 4, catatan: 1, breakdown: 1}, angkut: {ready: 15, catatan: 3, breakdown: 1} }},
+            { id: 27, name: 'Terminal Jambi', alat: { dermaga: {ready: 5, catatan: 1, breakdown: 1}, cy: {ready: 9, catatan: 3, breakdown: 1}, mobile: {ready: 3, catatan: 1, breakdown: 1}, angkut: {ready: 13, catatan: 2, breakdown: 2} }},
+            { id: 28, name: 'Terminal Pekanbaru', alat: { dermaga: {ready: 4, catatan: 2, breakdown: 1}, cy: {ready: 8, catatan: 2, breakdown: 2}, mobile: {ready: 3, catatan: 1, breakdown: 1}, angkut: {ready: 11, catatan: 3, breakdown: 2} }},
+            { id: 29, name: 'Terminal Padang', alat: { dermaga: {ready: 6, catatan: 1, breakdown: 1}, cy: {ready: 11, catatan: 2, breakdown: 1}, mobile: {ready: 4, catatan: 1, breakdown: 1}, angkut: {ready: 14, catatan: 2, breakdown: 2} }},
+            { id: 30, name: 'Terminal Bengkulu', alat: { dermaga: {ready: 4, catatan: 2, breakdown: 1}, cy: {ready: 7, catatan: 2, breakdown: 2}, mobile: {ready: 2, catatan: 1, breakdown: 1}, angkut: {ready: 10, catatan: 3, breakdown: 2} }}
+        ];
+
+        // Hitung total
+        function calculateTotals() {
+            let totals = {
+                ready: 0,
+                catatan: 0,
+                breakdown: 0,
+                categories: {
+                    dermaga: {ready: 0, catatan: 0, breakdown: 0},
+                    cy: {ready: 0, catatan: 0, breakdown: 0},
+                    mobile: {ready: 0, catatan: 0, breakdown: 0},
+                    angkut: {ready: 0, catatan: 0, breakdown: 0}
+                }
+            };
+
+            terminals.forEach(terminal => {
+                Object.keys(terminal.alat).forEach(category => {
+                    totals.ready += terminal.alat[category].ready;
+                    totals.catatan += terminal.alat[category].catatan;
+                    totals.breakdown += terminal.alat[category].breakdown;
+                    
+                    totals.categories[category].ready += terminal.alat[category].ready;
+                    totals.categories[category].catatan += terminal.alat[category].catatan;
+                    totals.categories[category].breakdown += terminal.alat[category].breakdown;
+                });
+            });
+
+            return totals;
+        }
+
+        // Update summary cards
+        function updateSummary() {
+            const totals = calculateTotals();
+            const totalAlat = totals.ready + totals.catatan + totals.breakdown;
+
+            document.getElementById('totalAlat').textContent = totalAlat.toLocaleString();
+            document.getElementById('totalReady').textContent = totals.ready.toLocaleString();
+            document.getElementById('totalCatatan').textContent = totals.catatan.toLocaleString();
+            document.getElementById('totalBreakdown').textContent = totals.breakdown.toLocaleString();
+
+            // Update percentages
+            const readyPercent = ((totals.ready / totalAlat) * 100).toFixed(1);
+            const catatanPercent = ((totals.catatan / totalAlat) * 100).toFixed(1);
+            const breakdownPercent = ((totals.breakdown / totalAlat) * 100).toFixed(1);
+
+            document.getElementById('readyPercent').textContent = readyPercent;
+            document.getElementById('catatanPercent').textContent = catatanPercent;
+            document.getElementById('breakdownPercent').textContent = breakdownPercent;
+
+            // Update chart
+            const chart = document.getElementById('overallChart');
+            chart.innerHTML = `
+                <div class="chart-segment bg-green-500" style="width: ${readyPercent}%">${totals.ready}</div>
+                <div class="chart-segment bg-amber-500" style="width: ${catatanPercent}%">${totals.catatan}</div>
+                <div class="chart-segment bg-red-500" style="width: ${breakdownPercent}%">${totals.breakdown}</div>
+            `;
+
+            return totals;
+        }
+
+        // Render category cards
+        function renderCategories(totals) {
+            const container = document.getElementById('categoryContainer');
+            const categoryNames = {
+                dermaga: 'Alat Dermaga',
+                cy: 'Alat CY',
+                mobile: 'Alat Mobile',
+                angkut: 'Alat Angkut'
+            };
+
+            container.innerHTML = Object.keys(totals.categories).map(category => {
+                const data = totals.categories[category];
+                const total = data.ready + data.catatan + data.breakdown;
+                return `
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-gray-700 mb-3">${categoryNames[category]}</h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-green-600">Ready</span>
+                                <span class="font-semibold">${data.ready}</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-amber-600">Catatan</span>
+                                <span class="font-semibold">${data.catatan}</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-red-600">Breakdown</span>
+                                <span class="font-semibold">${data.breakdown}</span>
+                            </div>
+                            <div class="border-t pt-2 flex justify-between font-bold text-sm">
+                                <span>Total</span>
+                                <span>${total}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render terminals
+        function renderTerminals() {
+            const container = document.getElementById('terminalContainer');
+            container.innerHTML = terminals.map(terminal => {
+                const totalReady = Object.values(terminal.alat).reduce((sum, cat) => sum + cat.ready, 0);
+                const totalCatatan = Object.values(terminal.alat).reduce((sum, cat) => sum + cat.catatan, 0);
+                const totalBreakdown = Object.values(terminal.alat).reduce((sum, cat) => sum + cat.breakdown, 0);
+                const totalAlat = totalReady + totalCatatan + totalBreakdown;
+
+                return `
+                    <div class="terminal-item" onclick="viewDetail(${terminal.id})">
+                        <h4 class="font-bold text-lg mb-3">${terminal.name}</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span>Total Alat</span>
+                                <span class="font-bold">${totalAlat}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Ready</span>
+                                <span class="font-semibold">${totalReady}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Catatan</span>
+                                <span class="font-semibold">${totalCatatan}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Breakdown</span>
+                                <span class="font-semibold">${totalBreakdown}</span>
+                            </div>
+                        </div>
+                        <button class="mt-4 w-full bg-white text-blue-600 py-2 px-4 rounded-lg font-semibold hover:bg-purple-50 transition">
+                            Lihat Detail
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // View detail function
+        function viewDetail(terminalId) {
+            alert(`Membuka detail laporan harian untuk Terminal ID: ${terminalId}`);
+            // Di sini bisa ditambahkan navigasi ke halaman detail
+        }
+
+        // Update last update time
+        function updateTime() {
+            const now = new Date();
+            const formatted = now.toLocaleString('id-ID', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('lastUpdate').textContent = formatted;
+        }
+
+        // Initialize
+        function init() {
+            const totals = updateSummary();
+            renderCategories(totals);
+            renderTerminals();
+            updateTime();
+        }
+
+        init();
+        
+        // Update time every minute
+        setInterval(updateTime, 60000);
+    </script>
+</body>
+</html>

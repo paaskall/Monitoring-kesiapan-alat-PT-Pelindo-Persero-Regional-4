@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PT Pelindo Terminal Petikemas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            margin: 2rem;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .login-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-input.error {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .register-link a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 1rem;
+        }
+
+        .forgot-password a {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .forgot-password a:hover {
+            color: #374151;
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #16a34a;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        /* Loading state */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 1rem;
+                border-radius: 15px;
+            }
+
+            .login-header {
+                padding: 1.5rem;
+            }
+
+            .login-body {
+                padding: 1.5rem;
+            }
+
+            .logo {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .logo-text {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-ship"></i>
+                </div>
+                <div class="logo-text">
+                    Terminal Petikemas
+                </div>
+            </div>
+            <h1>Monitoring System</h1>
+            <p class="text-blue-100 text-sm mt-2">PT Pelindo Terminal Petikemas</p>
+        </div>
+
+        <div class="login-body">
+            <div id="alertMessage" class="alert"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="username">
+                        <i class="fas fa-user mr-2"></i>Username
+                    </label>
+                    <input type="text" id="username" class="form-input" placeholder="Masukkan username" required>
+                    <div class="error-message" id="usernameError">Username harus diisi</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">
+                        <i class="fas fa-lock mr-2"></i>Password
+                    </label>
+                    <div class="password-container">
+                        <input type="password" id="password" class="form-input" placeholder="Masukkan password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword()">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="error-message" id="passwordError">Password harus diisi</div>
+                </div>
+
+                <div class="forgot-password">
+                    <a href="#" onclick="forgotPassword()">Lupa password?</a>
+                </div>
+
+                <button type="submit" class="login-btn" id="loginBtn">
+                    <span id="btnText">Login</span>
+                    <div id="btnSpinner" class="spinner" style="display: none;"></div>
+                </button>
+            </form>
+
+            <div class="divider">
+                <span>ATAU</span>
+            </div>
+
+            <div class="register-link">
+                <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.querySelector('.password-toggle i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Show alert message
+        function showAlert(message, type) {
+            const alert = document.getElementById('alertMessage');
+            alert.textContent = message;
+            alert.className = `alert alert-${type}`;
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+
+        // Validate form
+        function validateForm() {
+            let isValid = true;
+            const username = document.getElementById('username');
+            const password = document.getElementById('password');
+            const usernameError = document.getElementById('usernameError');
+            const passwordError = document.getElementById('passwordError');
+
+            // Reset errors
+            usernameError.style.display = 'none';
+            passwordError.style.display = 'none';
+            username.classList.remove('error');
+            password.classList.remove('error');
+
+            // Validate username
+            if (!username.value.trim()) {
+                usernameError.style.display = 'block';
+                username.classList.add('error');
+                isValid = false;
+            }
+
+            // Validate password
+            if (!password.value.trim()) {
+                passwordError.style.display = 'block';
+                password.classList.add('error');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Simulate login process
+        function loginUser(username, password) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    // Demo credentials
+                    const demoUsers = [
+                        { username: 'admin', password: 'admin123', role: 'Administrator' },
+                        { username: 'supervisor', password: 'super123', role: 'Supervisor' },
+                        { username: 'operator', password: 'operator123', role: 'Operator' }
+                    ];
+
+                    const user = demoUsers.find(u => 
+                        u.username === username && u.password === password
+                    );
+
+                    if (user) {
+                        resolve(user);
+                    } else {
+                        reject('Username atau password salah');
+                    }
+                }, 1500);
+            });
+        }
+
+        // Handle form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) return;
+
+            const loginBtn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+
+            // Show loading state
+            loginBtn.classList.add('loading');
+            btnText.style.display = 'none';
+            btnSpinner.style.display = 'inline-block';
+
+            try {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                const user = await loginUser(username, password);
+                
+                // Simulate successful login
+                showAlert(`Login berhasil! Selamat datang ${user.role}`, 'success');
+                
+                // Redirect to dashboard after successful login
+                setTimeout(() => {
+                    window.location.href = 'index.html'; 
+                }, 2000);
+
+            } catch (error) {
+                showAlert(error, 'error');
+            } finally {
+                // Hide loading state
+                loginBtn.classList.remove('loading');
+                btnText.style.display = 'inline';
+                btnSpinner.style.display = 'none';
+            }
+        });
+
+        // Forgot password handler
+        function forgotPassword() {
+            const username = document.getElementById('username').value;
+            if (!username) {
+                showAlert('Masukkan username terlebih dahulu untuk reset password', 'error');
+                document.getElementById('username').focus();
+                return;
+            }
+
+            showAlert(`Link reset password telah dikirim ke email terkait dengan username: ${username}`, 'success');
+        }
+
+        // Demo auto-fill for testing
+        function demoLogin(role) {
+            const credentials = {
+                'admin': { username: 'admin', password: 'admin123' },
+                'supervisor': { username: 'supervisor', password: 'super123' },
+                'operator': { username: 'operator', password: 'operator123' }
+            };
+
+            const cred = credentials[role];
+            document.getElementById('username').value = cred.username;
+            document.getElementById('password').value = cred.password;
+            
+            showAlert(`Demo ${role} credentials loaded`, 'success');
+        }
+
+        // Add demo buttons for testing (remove in production)
+        document.addEventListener('DOMContentLoaded', function() {
+            const demoHtml = `
+                <div style="position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; flex-direction: column;">
+                    <button onclick="demoLogin('admin')" style="background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 5px; font-size: 12px; cursor: pointer;">Demo Admin</button>
+                    <button onclick="demoLogin('supervisor')" style="background: #f59e0b; color: white; border: none; padding: 8px 12px; border-radius: 5px; font-size: 12px; cursor: pointer;">Demo Supervisor</button>
+                    <button onclick="demoLogin('operator')" style="background: #10b981; color: white; border: none; padding: 8px 12px; border-radius: 5px; font-size: 12px; cursor: pointer;">Demo Operator</button>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', demoHtml);
+        });
+    </script>
+</body>
+</html>
